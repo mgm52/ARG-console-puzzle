@@ -1,0 +1,21 @@
+﻿  ConsoleGraphic.cpp
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\consolegraphic.cpp(19): warning C4018: '<': signed/unsigned mismatch
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\consolegraphic.cpp(20): warning C4018: '>': signed/unsigned mismatch
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\consolegraphic.cpp(77): warning C4018: '<': signed/unsigned mismatch
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\consolegraphic.cpp(81): warning C4018: '<': signed/unsigned mismatch
+  CppConsolePuzzle.cpp
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\cppconsolepuzzle.cpp(1): warning C4603: '_WIN32_WINNT': macro is not defined or definition is different after precompiled header use
+  c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\cppconsolepuzzle.cpp(1): note: Add macro to precompiled header instead of defining here
+  c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\cppconsolepuzzle.cpp(3): note: use of precompiled header
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\cppconsolepuzzle.cpp(86): warning C4018: '<': signed/unsigned mismatch
+  SelectionGame.cpp
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\selectiongame.cpp(28): warning C4018: '<': signed/unsigned mismatch
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\selectiongame.cpp(121): warning C4018: '>=': signed/unsigned mismatch
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\selectiongame.cpp(128): warning C4018: '<': signed/unsigned mismatch
+c:\users\maxth\uniwork\onedrive - university of cambridge\projects\fresher arg\cppconsolepuzzlereal\cppconsolepuzzle\selectiongame.cpp(137): warning C4244: '=': conversion from 'time_t' to 'int', possible loss of data
+  Generating code
+  11 of 469 functions ( 2.3%) were compiled, the rest were copied from previous compilation.
+    8 functions were new in current compilation
+    12 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  CppConsolePuzzle.vcxproj -> C:\Users\maxth\UniWork\OneDrive - University of Cambridge\Projects\Fresher ARG\CppConsolePuzzleREAL\Release\CppConsolePuzzle.exe
