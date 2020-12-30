@@ -1,16 +1,13 @@
 #include "pch.h"
-#include <vector>
-#include <string>
 #include "ConsoleGraphic.h"
 #include "ConsoleUtils.h"
+#include <string>
+#include <vector>
 
-ConsoleGraphic::ConsoleGraphic() : ConsoleGraphic({ "" })
-{
-}
 
-ConsoleGraphic::~ConsoleGraphic()
-{
-}
+ConsoleGraphic::ConsoleGraphic() : ConsoleGraphic({ "" }) {}
+
+ConsoleGraphic::~ConsoleGraphic() {}
 
 ConsoleGraphic::ConsoleGraphic(std::vector<std::string> str, int direc, int dist)
 {
@@ -24,11 +21,11 @@ ConsoleGraphic::ConsoleGraphic(std::vector<std::string> str, int direc, int dist
 	load_position(direc, dist);
 }
 
-int ConsoleGraphic::getWidth() {
+int ConsoleGraphic::get_width() {
 	return gwidth_;
 }
 
-int ConsoleGraphic::getHeight() {
+int ConsoleGraphic::get_height() {
 	return gheight_;
 }
 

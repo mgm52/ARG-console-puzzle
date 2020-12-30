@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+#include <vector>
+
 class ConsoleGraphic
 {
 private:
@@ -13,8 +16,8 @@ public:
 	void print(int animate_delay = 0, bool animate_horizontal = false);
 	ConsoleGraphic load_position(int direc, int dist);
 
-	int getWidth();
-	int getHeight();
+	int get_width();
+	int get_height();
 
 	static ConsoleGraphic whitespace(int width, int height);
 

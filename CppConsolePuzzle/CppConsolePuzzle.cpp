@@ -1,11 +1,11 @@
 ﻿#define _WIN32_WINNT 0x0500
-#include <Windows.h>
 #include "pch.h"
-#include "ConsoleUtils.h"
-#include "SelectionGame.h"
 #include "ConsoleGraphic.h"
+#include "ConsoleUtils.h"
 #include "Images.h"
+#include "SelectionGame.h"
 #include <algorithm>
+#include <Windows.h>
 
 SelectionGame* get_clock_puzzle() {
 	std::vector<std::string> clock_times{
@@ -25,14 +25,20 @@ SelectionGame* get_humphrey_puzzle() {
 		400, "DANKE", 0);
 }
 
+SelectionGame* get_hardware_puzzle() {
+	return new SelectionGame(ConsoleGraphic(images::HARDWARE),
+		{ "PSU", "HDD", "MOBO", "FAN" }, { 2, 1, 0, 3 },
+		320, "ARIGATO", 0);
+}
+
 SelectionGame* get_french_puzzle() {
-	std::vector<std::string> parts{ //Spells [REDACTED]
+	std::vector<std::string> parts{ //Spells "sarcelle"
 		"le", "cel", "ar", "s"
 	};
 	std::reverse(parts.begin(), parts.end());
 
 	return new SelectionGame(ConsoleGraphic(images::TEAL),
-		parts, {3, 1, 0, 2},
+		parts, { 3, 1, 0, 2 },
 		600, "MERCI", -10);
 }
 
@@ -46,12 +52,6 @@ SelectionGame* get_chinese_puzzle() {
 	return new SelectionGame(ConsoleGraphic(images::AI),
 		aichinese, { 0, 2, 1, 3 },
 		320, "XIEXIE", -8);
-}
-
-SelectionGame* get_hardware_puzzle() {
-	return new SelectionGame(ConsoleGraphic(images::HARDWARE), 
-		{ "PSU", "HDD", "MOBO", "FAN" }, {2, 1, 0, 3},
-		320, "ARIGATO", 0);
 }
 
 int main()
@@ -90,10 +90,9 @@ int main()
 	ConsoleGraphic({ "Bots tell secrets to those who give complements.", s, "", "    How discordant." }).print(100, true);
 
 	Sleep(1000);
-	
+
 	ConsoleGraphic::whitespace(55, 2).load_position(2, 3).print(100, true);
 	ConsoleGraphic({ "[END OF THIS PROGRAM. THANK YOU FOR PARTICIPATING!]" }, 2, 3).print(50, true);
-
 
 	std::cin.ignore();
 	std::cin.get();

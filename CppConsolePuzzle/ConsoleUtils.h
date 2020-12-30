@@ -1,11 +1,9 @@
 #pragma once
-
-#include "pch.h"
-#include <iostream>
-#include <Windows.h>
 #include <cwchar>
-#include <vector>
+#include <iostream>
 #include <string>
+#include <vector>
+#include <Windows.h>
 
 // Setup
 extern int bwidth;

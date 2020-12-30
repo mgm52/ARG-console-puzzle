@@ -1,72 +1,74 @@
 #include "pch.h"
-#include "SelectionGame.h"
-#include <vector>
-#include <string>
-#include <stdlib.h>
-#include "ConsoleUtils.h"
 #include "ConsoleGraphic.h"
-#include <time.h>
+#include "ConsoleUtils.h"
 #include "Images.h"
+#include "SelectionGame.h"
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#include <vector>
 
-SelectionGame::SelectionGame(ConsoleGraphic centrePiece,
-	std::vector<std::string> wordOptions,
-	std::vector<int> startingIndices,
-	int beepHz,
-	std::string endText,
+SelectionGame::SelectionGame(ConsoleGraphic centre_piece,
+	std::vector<std::string> word_options,
+	std::vector<int> starting_indices,
+	int beep_hz,
+	std::string end_text,
 	int arrows_offset)
 {
-	endText_ = endText;
+	centre_piece_ = centre_piece;
 
-	centrePiece_ = centrePiece;
+	int arrow_x = centre_piece.get_width() / 2 + 4 + arrows_offset;
+	int arrow_y = centre_piece.get_height() / 2 + 2 + arrows_offset / 2;
 
-	arrow_x_ = centrePiece.getWidth() / 2 + 4 + arrows_offset;
-	arrow_y_ = centrePiece.getHeight() / 2 + 2 + arrows_offset / 2;
+	option_x_ = arrow_x + 6;
+	option_y_ = arrow_y + 3;
 
-	option_x_ = arrow_x_ + 6;
-	option_y_ = arrow_y_ + 3;
+	selected_item_ = 0;
+	current_indices_ = starting_indices;
 
-	for (int i = 0; i < wordOptions.size(); i++) {
-		wordOptions_.push_back(ConsoleGraphic({ wordOptions[i] }));
+	last_correct_time_ = -1;
+	space_held_ = false;
+
+	for (int i = 0; i < word_options.size(); i++) {
+		word_options_.push_back(ConsoleGraphic({ word_options[i] }));
 	}
-
-	currentIndices_ = startingIndices;
-
-	beepHz_ = beepHz;
-
-	spaceHeld_ = false;
-
-	lastCorrectTime_ = -1;
+	arrows_ = { ConsoleGraphic({ "^","|" }, 0, arrow_y),
+									   ConsoleGraphic({ "-->" }, 1, arrow_x),
+									   ConsoleGraphic({ "|","v" }, 2, arrow_y),
+									   ConsoleGraphic({ "<--" }, 3, arrow_x) };
 
 	drawing_ = true;
 	playing_ = false;
 
-	arrows_ = { ConsoleGraphic({ "^","|" }, 0, arrow_y_),
-									   ConsoleGraphic({ "-->" }, 1, arrow_x_),
-									   ConsoleGraphic({ "|","v" }, 2, arrow_y_),
-									   ConsoleGraphic({ "<--" }, 3, arrow_x_) };
+	beep_hz_ = beep_hz;
+
+	endText_ = end_text;
 }
 
-void SelectionGame::Redraw() {
-	if (drawing_) {
-		clear_buffer();
-		centrePiece_.print(0, 0);
+void SelectionGame::play() {
+	playing_ = true;
 
-		arrows_[selectedItem_].print();
+	redraw();
 
-		for (int i = 0; i < 4; i++) {
-			wordOptions_[currentIndices_[i]].load_position(i, (i % 2) ? option_x_ : option_y_).print();
-		}
+	while (playing_) {
+		Sleep(50);
+		respond_to_input();
 	}
 }
 
-void SelectionGame::SetDrawMode(bool drawing) {
-	drawing_ = drawing;
-	if (drawing) Redraw();
+void SelectionGame::play_intro() {
+	clear_buffer();
+	centre_piece_.load_position(0, 0).print(50, true);
+
+	Sleep(500);
+
+	play();
 }
 
 void SelectionGame::play_tutorial() {
-	SetDrawMode(false);
+	set_draw_mode(false);
 
+	// Wait for user to press arrow key
 	clear_buffer();
 	ConsoleGraphic({ "ARROW KEY" }).print(0, 0);
 
@@ -75,8 +77,9 @@ void SelectionGame::play_tutorial() {
 		Sleep(50);
 		update_key_buffer();
 	};
-	SetSelectedItem(a);
+	set_selected_item(a);
 
+	// Wait for user to press space
 	clear_buffer();
 	ConsoleGraphic({ "SPACE" }).print(0, 0);
 
@@ -84,104 +87,110 @@ void SelectionGame::play_tutorial() {
 		Sleep(50);
 		update_key_buffer();
 	}
-	ToggleSelected();
+	toggle_selected();
 
+	// Show UI
 	system("color 8f");
-	SetDrawMode(true);
+	set_draw_mode(true);
 	play();
 }
 
-void SelectionGame::play_intro() {
-	clear_buffer();
-	centrePiece_.load_position(0, 0).print(50, true);
-
-	Sleep(500);
-
-	play();
+void SelectionGame::set_selected_item(int index) {
+	selected_item_ = index;
+	redraw();
 }
 
-void SelectionGame::play() {
-	playing_ = true;
-
-	Redraw();
-
-	while (playing_) {
-		Sleep(50);
-		RespondToInput();
-	}
-}
-
-void SelectionGame::SetSelectedItem(int index) {
-	selectedItem_ = index;
-	Redraw();
-}
-
-void SelectionGame::ToggleSelected() {
-	currentIndices_[selectedItem_] += 1;
-	if (currentIndices_[selectedItem_] >= wordOptions_.size()) currentIndices_[selectedItem_] = 0;
-	Redraw();
-	Beep(beepHz_, 50);
-}
-
-int SelectionGame::CheckCorrect() {
+int SelectionGame::check_correct() {
 	// Check if we have a winning combination (0, 1, 2, 3). If check fails at any point, return 0.
-	for (int i = 0; i < currentIndices_.size(); i++) {
-		if (currentIndices_[i] != i) {
-			lastCorrectTime_ = -1;
+	for (int i = 0; i < current_indices_.size(); i++) {
+		if (current_indices_[i] != i) {
+			last_correct_time_ = -1;
 			return 0;
 		}
 	}
 
 	// First landed correct answer, wait until user's lingered on it
-	if (lastCorrectTime_ < 0) {
-		lastCorrectTime_ = time(NULL);
+	if (last_correct_time_ < 0) {
+		last_correct_time_ = time(NULL);
 		return 0;
 	}
 
 	// If we've had the correct answer selected for 1s, return 1
-	if (lastCorrectTime_ > 0 && time(NULL) - lastCorrectTime_  >= 3) {
+	if (last_correct_time_ > 0 && time(NULL) - last_correct_time_ >= 3) {
 		return 1;
 	}
 
 	return 0;
 }
 
-void SelectionGame::CorrectAnswer() {
+void SelectionGame::correct_answer() {
 	playing_ = false;
 
 	Sleep(1000);
 	clear_buffer();
 
-	ConsoleGraphic({images::TICK}).print(50);
+	ConsoleGraphic({ images::TICK }).print(50);
 
 	ConsoleGraphic({ endText_ }, 2, 12).print(1000);
 
 	Sleep(2000);
 }
 
+void SelectionGame::redraw() {
+	if (drawing_) {
+		clear_buffer();
+		centre_piece_.print(0, 0);
 
+		arrows_[selected_item_].print();
 
-int SelectionGame::RespondToInput() {
+		for (int i = 0; i < 4; i++) {
+			word_options_[current_indices_[i]].load_position(i, (i % 2) ? option_x_ : option_y_).print();
+		}
+	}
+}
+
+int SelectionGame::respond_to_input() {
 	std::cin.clear();
 
 	update_key_buffer();
 
 	int arrowDir = get_arrow_key();
-	if (arrowDir > -1) SetSelectedItem(arrowDir);
+	if (arrowDir > -1) set_selected_item(arrowDir);
 
 	int won = 0;
 	if (get_space_key())
 	{
-		if (!spaceHeld_) {
-			spaceHeld_ = true;
-			ToggleSelected();
+		if (!space_held_) {
+			space_held_ = true;
+			toggle_selected();
 		}
 	}
 	else {
-		spaceHeld_ = false;
+		space_held_ = false;
 	}
 
-	if (CheckCorrect()) CorrectAnswer();
+	if (check_correct()) correct_answer();
 
 	return 0;
 }
+
+void SelectionGame::set_draw_mode(bool drawing) {
+	drawing_ = drawing;
+	if (drawing) redraw();
+}
+
+void SelectionGame::toggle_selected() {
+	current_indices_[selected_item_] += 1;
+	if (current_indices_[selected_item_] >= word_options_.size()) current_indices_[selected_item_] = 0;
+	redraw();
+	Beep(beep_hz_, 50);
+}
+
+
+
+
+
+
+
+
+

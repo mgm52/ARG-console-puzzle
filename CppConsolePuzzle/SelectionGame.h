@@ -1,52 +1,47 @@
 #pragma once
-#include <vector>
-#include <string>
 #include "ConsoleGraphic.h"
+#include <string>
+#include <vector>
 
 class SelectionGame
 {
-	ConsoleGraphic centrePiece_;
+	ConsoleGraphic centre_piece_;
 
-	int arrow_x_;
-	int arrow_y_;
 	int option_x_;
 	int option_y_;
 
-	int selectedItem_;
+	int selected_item_;
+	std::vector<int> current_indices_;
+
+	int last_correct_time_;
+	bool space_held_;
+
+	// Answers are in order [0, 1, 2, 3]
+	std::vector<ConsoleGraphic> word_options_;
+	std::vector<ConsoleGraphic> arrows_;
 
 	int drawing_;
 	int playing_;
 
-	int beepHz_;
-
-	// Answers are in order REDACTED
-	std::vector<ConsoleGraphic> wordOptions_;
-
-	std::vector<int> currentIndices_;
+	int beep_hz_;
 
 	std::string endText_;
 
-	std::vector<ConsoleGraphic> arrows_;
-
-	int lastCorrectTime_;
-
-	bool spaceHeld_;
+	int check_correct();
+	void correct_answer();
+	void redraw();
+	int respond_to_input();
+	void set_selected_item(int index);
+	void toggle_selected();
 public:
-	SelectionGame(ConsoleGraphic centrePiece,
-		std::vector<std::string> wordOptions,
-		std::vector<int> startingIndices,
-		int beepHz,
-		std::string endText,
+	SelectionGame(ConsoleGraphic centre_piece,
+		std::vector<std::string> word_options,
+		std::vector<int> starting_indices,
+		int beep_hz,
+		std::string end_text,
 		int arrows_offset);
 	void play();
-	void Redraw();
-	void SetDrawMode(bool drawing);
 	void play_intro();
-	int RespondToInput();
-	void ToggleSelected();
-	void SetSelectedItem(int index);
-	void CorrectAnswer();
 	void play_tutorial();
-	int CheckCorrect();
+	void set_draw_mode(bool drawing);
 };
-
