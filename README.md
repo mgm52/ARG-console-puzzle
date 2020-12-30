@@ -26,3 +26,7 @@ To make it more difficult to deduce the answers from binaries, some values were 
       5 - +4EBA, I, +667A, +80FD
       
    </details>
+
+## Release
+
+For now, the program can be run from Release/CppConsolePuzzle.exe.
